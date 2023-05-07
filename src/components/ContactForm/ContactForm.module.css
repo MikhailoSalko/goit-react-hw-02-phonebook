@@ -1,0 +1,12 @@
+.button {
+  padding: 10px 15px;
+  color: #2a2a2a;
+  background-color: chartreuse;
+}
+
+.input {
+  width: 100px;
+  height: 30px;
+  border: 2px solid #2a2a2a;
+  margin-bottom: 20px;
+}
