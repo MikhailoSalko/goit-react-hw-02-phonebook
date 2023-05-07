@@ -1,13 +1,13 @@
 .submitButton {
   padding: 10px 15px;
   color: #2a2a2a;
-  background-color: rgb(222, 189, 189);
+  background-color: transparent;
   border-radius: 5px;
   transition: background-color 300ms ease-in-out;
 
   &:hover,
   &:focus {
-    background-color: rgb(0, 255, 80);
+    background-color: rgb(0, 255, 0);
   }
 }
 
