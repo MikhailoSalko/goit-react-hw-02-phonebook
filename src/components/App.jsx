@@ -1,35 +1,69 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
-// import ContactForm from './ContactForm/ContactForm';
-import styles from '../components/ContactForm/ContactForm.module.css';
+import { Notify } from 'notiflix';
+import ContactForm from './ContactForm/ContactForm';
+import Filter from './Filter/Filter';
+import ContactList from './ContactList/ContactList';
 
 class App extends Component {
   state = {
-    contacts: [],
-    name: '',
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
   };
 
-  handleInputChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  };
-
-  handleSubmitForm = e => {
-    e.preventDefault();
-    this.setState(({ name, contacts }) => {
+  addNewContact = ({ name, number }) => {
+    if (this.checkContact(name)) {
+      Notify.failure(`${name} is already in your contacts`);
+      return;
+    }
+    this.setState(({ contacts }) => {
       const newContact = {
         id: nanoid(),
         name,
+        number,
       };
-
       return {
         contacts: [...contacts, newContact],
       };
     });
   };
 
+  filterInput = ({ target }) => {
+    this.setState({ filter: target.value });
+  };
+
+  deleteContact = id => {
+    this.setState(({ contacts }) => {
+      const filteredContacts = contacts.filter(contact => contact.id !== id);
+      return { contacts: filteredContacts };
+    });
+  };
+
+  filterContactList = () => {
+    const { filter, contacts } = this.state;
+    const filteredContacts = contacts.filter(({ name }) => {
+      return name.toLowerCase().trim().includes(filter.toLowerCase().trim());
+    });
+    return filteredContacts;
+  };
+
+  checkContact = name => {
+    const normalizadName = name.toLowerCase().trim();
+    const { contacts } = this.state;
+    const foundContact = contacts.find(
+      ({ name }) => name.toLowerCase().trim() === normalizadName
+    );
+    return Boolean(foundContact);
+  };
+
   render() {
-    const { name, contacts } = this.state;
+    const contacts = this.filterContactList();
+
     return (
       <div
         style={{
@@ -41,38 +75,17 @@ class App extends Component {
           color: '#010101',
         }}
       >
-        {/* <ContactForm />
-         */}
         <div>
-          <div>
-            <h1>PhoneBook</h1>
-            <form onSubmit={this.handleSubmitForm}>
-              <label>
-                <input
-                  onChange={this.handleInputChange}
-                  className={styles.input}
-                  type="text"
-                  name="name"
-                  pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                  title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-                  required
-                />
-                Name
-              </label>
-              <button type="submit" className={styles.button}>
-                Add Contact
-              </button>
-            </form>
+          <div style={{ marginBottom: '30px', width: '350px' }}>
+            <h2 style={{ marginBottom: '10px', fontSize: '40px' }}>
+              PhoneBook
+            </h2>
+            <ContactForm onSubmit={this.addNewContact} />
           </div>
           <div>
-            <h2>Contacts</h2>
-            <div>
-              <ol>
-                {contacts.map(({ id, name }) => {
-                  return <li key={id}>{name}</li>;
-                })}
-              </ol>
-            </div>
+            <h3 style={{ marginBottom: '10px', fontSize: '30px' }}>Contacts</h3>
+            <Filter filterInput={this.filterInput} />
+            <ContactList contacts={contacts} onClick={this.deleteContact} />
           </div>
         </div>
       </div>
