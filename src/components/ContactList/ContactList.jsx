@@ -5,7 +5,14 @@ import ContactItem from './ContactItem/ContactItem';
 const ContactList = ({ contacts, onClick }) => {
   return (
     <ul className={styles.list}>
-      <ContactItem contacts={contacts} onClick={onClick} />
+      {contacts.map(({ id, name, number }) => (
+        <ContactItem
+          key={id}
+          name={name}
+          number={number}
+          onClick={() => onClick(id)}
+        />
+      ))}
     </ul>
   );
 };

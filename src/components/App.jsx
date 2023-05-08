@@ -17,7 +17,7 @@ class App extends Component {
   };
 
   addNewContact = ({ name, number }) => {
-    if (this.checkContact(name)) {
+    if (this.checkContactExist(name)) {
       Notify.failure(`${name} is already in your contacts`);
       return;
     }
@@ -33,15 +33,24 @@ class App extends Component {
     });
   };
 
-  filterInput = ({ target }) => {
-    this.setState({ filter: target.value });
-  };
-
   deleteContact = id => {
     this.setState(({ contacts }) => {
       const filteredContacts = contacts.filter(contact => contact.id !== id);
       return { contacts: filteredContacts };
     });
+  };
+
+  checkContactExist = name => {
+    const normalizadName = name.toLowerCase().trim();
+    const { contacts } = this.state;
+    const foundContact = contacts.find(
+      ({ name }) => name.toLowerCase().trim() === normalizadName
+    );
+    return Boolean(foundContact);
+  };
+
+  filterInput = ({ target }) => {
+    this.setState({ filter: target.value });
   };
 
   filterContactList = () => {
@@ -50,15 +59,6 @@ class App extends Component {
       return name.toLowerCase().trim().includes(filter.toLowerCase().trim());
     });
     return filteredContacts;
-  };
-
-  checkContact = name => {
-    const normalizadName = name.toLowerCase().trim();
-    const { contacts } = this.state;
-    const foundContact = contacts.find(
-      ({ name }) => name.toLowerCase().trim() === normalizadName
-    );
-    return Boolean(foundContact);
   };
 
   render() {
