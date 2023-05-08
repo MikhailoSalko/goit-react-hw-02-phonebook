@@ -62,6 +62,7 @@ class App extends Component {
   };
 
   render() {
+    const { filter } = this.state;
     const contacts = this.filterContactList();
 
     return (
@@ -84,7 +85,7 @@ class App extends Component {
           </div>
           <div>
             <h3 style={{ marginBottom: '10px', fontSize: '30px' }}>Contacts</h3>
-            <Filter filterInput={this.filterInput} />
+            <Filter filter={filter} filterInput={this.filterInput} />
             <ContactList contacts={contacts} onClick={this.deleteContact} />
           </div>
         </div>

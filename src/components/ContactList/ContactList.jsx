@@ -29,3 +29,7 @@ ContactList.propTypes = {
     })
   ),
 };
+
+ContactList.defaultProps = {
+  contacts: [],
+};
